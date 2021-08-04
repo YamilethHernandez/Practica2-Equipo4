@@ -1,21 +1,21 @@
+from enum import Enum
+
 from fastapi import FastAPI
-from pydantic import BaseModel
 
 app = FastAPI()
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: bool = None
-      
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-  
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str = None):
-    return {"item_id": item_id, "q": q}
-  
-@app.put("/items/{item_id}")
-def create_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
+class ModelName(str, Enum):
+    Nombre = "Nombre"
+    Apellidos = "Apellidos"
+    IRyC = "IRyC"
+
+@app.get("/models/{model_name}")
+async def get_model(model_name: ModelName):
+    if model_name == ModelName.Nombre:
+        return {"model_name": model_name, "message": "Mi Nombre Diana Berenice"}
+       
+
+    if model_name.value == "IRyC":
+        return {"model_name": model_name, "message": "Carrera: Ingeniería en Redes Inteligentes y Ciberseguridad"}
+
+    return {"model_name": model_name, "message": "Mis apellidos son Aguilar"}
